@@ -1,0 +1,14 @@
+names:
+- civilian
+- soldier
+nc: 2
+path: /content/civilian_soldier_working
+roboflow:
+  license: CC BY 4.0
+  project: FINAL-CSC/aerial-detection
+  url: https://universe.roboflow.com/KURTCHINTAAA/FINAL-CSC/aerial-detection/dataset/1;https://universe.roboflow.com/carlapit/human-drone-shots/browse?queryText=&pageSize=50&startingIndex=0&browseQuery=true;https://universe.roboflow.com/militarypersons/uav-person-3
+  version: 1
+  workspace: KURTCHINTAAA
+test: test/images
+train: train/images
+val: val/images

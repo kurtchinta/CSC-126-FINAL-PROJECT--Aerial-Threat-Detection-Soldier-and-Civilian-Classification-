@@ -1,0 +1,7 @@
+names:
+- civilian
+- soldier
+nc: 2
+path: /content/civilian_soldier_working
+train: train/images
+val: val/images

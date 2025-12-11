@@ -1,0 +1,8 @@
+names:
+- civilian
+- soldier
+nc: 2
+path: ./data/processed
+test: images/test
+train: images/train
+val: images/val

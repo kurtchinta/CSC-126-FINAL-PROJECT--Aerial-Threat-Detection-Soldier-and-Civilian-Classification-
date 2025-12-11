@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Defense Reconnaissance System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            color: #fff;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+
+        .sidebar {
+            width: 380px;
+            background: linear-gradient(180deg, rgba(16, 185, 129, 0.15) 0%, rgba(5, 150, 105, 0.1) 100%);
+            backdrop-filter: blur(20px);
+            padding: 25px;
+            overflow-y: auto;
+            border-right: 2px solid rgba(16, 185, 129, 0.3);
+            box-shadow: 4px 0 20px rgba(16, 185, 129, 0.1);
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 25px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(5, 150, 105, 0.15) 100%);
+            border-radius: 15px;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            box-shadow: 0 8px 32px rgba(16, 185, 129, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(16, 185, 129, 0.1), transparent);
+            animation: headerShine 3s infinite;
+        }
+
+        @keyframes headerShine {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .header h1 {
+            font-size: 26px;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header p {
+            font-size: 13px;
+            color: #6ee7b7;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(5, 150, 105, 0.1) 100%);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(16, 185, 129, 0.25);
+            box-shadow: 0 4px 16px rgba(16, 185, 129, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .section:hover {
+            box-shadow: 0 6px 24px rgba(16, 185, 129, 0.2);
+            border-color: rgba(16, 185, 129, 0.4);
+        }
+
+        .section-title {
+            font-size: 15px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #6ee7b7;
+            text-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            margin-bottom: 8px;
+            color: #a7f3d0;
+            font-weight: 500;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 12px;
+            background: rgba(16, 185, 129, 0.08);
+            border: 2px solid rgba(16, 185, 129, 0.3);
+            border-radius: 8px;
+            color: #d1fae5;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #10b981;
+            background: rgba(16, 185, 129, 0.12);
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
+        }
+
+        input[type="text"]::placeholder {
+            color: rgba(167, 243, 208, 0.5);
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border: 2px solid rgba(16, 185, 129, 0.5);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 8px;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(16, 185, 129, 0.5);
+        }
+
+        button:active {
+            transform: translateY(-1px);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        button:disabled:hover {
+            transform: none;
+        }
+
+        button.primary {
+            background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+            border-color: #10b981;
+        }
+
+        button.primary:hover {
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+        }
+
+        button.danger {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            border-color: rgba(239, 68, 68, 0.5);
+        }
+
+        button.danger:hover {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            box-shadow: 0 6px 25px rgba(239, 68, 68, 0.5);
+        }
+
+        button.btn-secondary {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.3) 0%, rgba(5, 150, 105, 0.25) 100%);
+            margin-top: 0;
+        }
+
+        button.btn-secondary:hover {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.4) 0%, rgba(5, 150, 105, 0.35) 100%);
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .input-group input {
+            flex: 1;
+        }
+
+        .input-group button {
+            width: auto;
+            padding: 10px 20px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(5, 150, 105, 0.15) 100%);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            border: 2px solid rgba(16, 185, 129, 0.3);
+            box-shadow: 0 4px 16px rgba(16, 185, 129, 0.15);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(16, 185, 129, 0.1), transparent);
+            transition: transform 0.5s;
+        }
+
+        .stat-card:hover::before {
+            transform: rotate(180deg);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(16, 185, 129, 0.3);
+            border-color: #10b981;
+        }
+
+        .stat-value {
+            font-size: 42px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #6ee7b7 0%, #34d399 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #a7f3d0;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
+        }
+
+        .output-area {
+            flex: 1;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.4) 100%);
+            border-radius: 12px;
+            padding: 20px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            border: 2px solid rgba(16, 185, 129, 0.2);
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .log-entry {
+            margin-bottom: 8px;
+            padding: 8px 12px;
+            border-left: 4px solid;
+            background: rgba(16, 185, 129, 0.05);
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .log-entry:hover {
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .log-entry.info {
+            border-color: #10b981;
+            color: #d1fae5;
+        }
+
+        .log-entry.error {
+            border-color: #ef4444;
+            color: #fecaca;
+            background: rgba(239, 68, 68, 0.05);
+        }
+
+        .log-entry.error:hover {
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .log-entry.success {
+            border-color: #10b981;
+            color: #6ee7b7;
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .status-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(5, 150, 105, 0.1) 100%);
+            border-radius: 12px;
+            border: 2px solid rgba(16, 185, 129, 0.25);
+            box-shadow: 0 4px 16px rgba(16, 185, 129, 0.1);
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 10px;
+            animation: pulse 2s infinite;
+            box-shadow: 0 0 10px;
+        }
+
+        .status-indicator.idle {
+            background: #64748b;
+            box-shadow: 0 0 10px #64748b;
+        }
+
+        .status-indicator.running {
+            background: #10b981;
+            box-shadow: 0 0 20px #10b981;
+        }
+
+        .status-indicator.error {
+            background: #ef4444;
+            box-shadow: 0 0 20px #ef4444;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
+        }
+
+        .tabs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 12px;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(5, 150, 105, 0.1) 100%);
+            border: 2px solid rgba(16, 185, 129, 0.2);
+            border-radius: 8px;
+            color: #a7f3d0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .tab:hover {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.25) 0%, rgba(5, 150, 105, 0.2) 100%);
+            border-color: rgba(16, 185, 129, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border-color: #10b981;
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(16, 185, 129, 0.1);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.7);
+        }
+
+        #statusText {
+            color: #d1fae5;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <div class="header">
+                <h1>Defense Reconnaissance System</h1>
+                <p>Soldier & Civilian Classification | Aerial Surveillance</p>
+            </div>
+
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('video', event)">Video</button>
+                <button class="tab" onclick="switchTab('stream', event)">Stream</button>
+            </div>
+
+            <!-- Video Detection Tab -->
+            <div id="video-tab" class="tab-content active">
+                <div class="section">
+                    <div class="section-title">Video Configuration</div>
+                    <div class="form-group">
+                        <label>Video File</label>
+                        <div class="input-group">
+                            <input type="text" id="videoPath" placeholder="Select video file..." readonly>
+                            <button onclick="selectVideoFile()" class="btn-secondary">Browse</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stream Detection Tab -->
+            <div id="stream-tab" class="tab-content">
+                <div class="section">
+                    <div class="section-title">Stream Configuration</div>
+                    <div class="form-group">
+                        <label>Stream Source</label>
+                        <select id="streamSource">
+                            <option value="0">Webcam (0)</option>
+                            <option value="rtsp">RTSP Stream</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="rtspUrlGroup" style="display: none;">
+                        <label>RTSP URL</label>
+                        <input type="text" id="rtspUrl" placeholder="rtsp://192.168.1.100:8554/stream">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Model Configuration -->
+            <div class="section">
+                <div class="section-title">Model Configuration</div>
+                <div class="form-group">
+                    <label>Model Path</label>
+                    <input type="text" id="modelPath" value="backend/civilian_soldier_working/yolo11n.pt" placeholder="YOLO11n model">
+                    <button onclick="selectModelFile()" style="margin-top: 5px;">Browse Model</button>
+                </div>
+                <div class="form-group">
+                    <label>Confidence Threshold</label>
+                    <input type="number" id="confidence" value="0.50" min="0" max="1" step="0.05">
+                </div>
+                <div class="form-group">
+                    <label>IOU Threshold</label>
+                    <input type="number" id="iou" value="0.45" min="0" max="1" step="0.05">
+                </div>
+            </div>
+
+            <!-- Control Buttons -->
+            <div class="controls">
+                <button id="startBtn" onclick="startDetection()">▶ Start Detection</button>
+                <button id="stopBtn" class="danger" onclick="stopDetection()" disabled>⬛ Stop Detection</button>
+            </div>
+
+            <!-- Statistics -->
+            <div class="section">
+                <div class="section-title">Detection Statistics</div>
+                <div class="stats">
+                    <div class="stat-card">
+                        <div class="stat-value" id="civilianCount">0</div>
+                        <div class="stat-label">Civilians</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="soldierCount">0</div>
+                        <div class="stat-label">Soldiers</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="personCount">0</div>
+                        <div class="stat-label">Total</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="section" style="margin-bottom: 20px;">
+                <div class="status-bar">
+                    <div>
+                        <span class="status-indicator idle" id="statusIndicator"></span>
+                        <span id="statusText">System ready. Configure settings and start detection.</span>
+                    </div>
+                    <button onclick="clearOutput()" style="width: auto; padding: 8px 16px; margin: 0;">Clear Log</button>
+                </div>
+            </div>
+
+            <div class="section" style="flex: 1; display: flex; flex-direction: column;">
+                <div class="section-title">Detection Output</div>
+                <div class="output-area" id="outputArea">
+                    <div class="log-entry info">System ready. Configure settings and start detection.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="renderer.js"></script>
+</body>
+</html>

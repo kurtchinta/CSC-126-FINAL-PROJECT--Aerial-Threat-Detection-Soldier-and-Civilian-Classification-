@@ -1,0 +1,8 @@
+names:
+- civilian
+- soldier
+- cevilian
+nc: 3
+path: C:\Users\johnr\Desktop\csc\backend\datasets\custom
+train: images/train
+val: images/val

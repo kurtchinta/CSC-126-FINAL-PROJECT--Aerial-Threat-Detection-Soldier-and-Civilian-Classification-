@@ -1,0 +1,8 @@
+names:
+- civilian
+- soldier
+nc: 2
+path: c:/Users/Kurt/Desktop/FINAL-CSC/backend/civilian_soldier_working
+test: test/images
+train: train/images
+val: val/images
