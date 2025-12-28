@@ -1,7 +1,7 @@
 # CSC 126 Final Project: Aerial Threat Detection - Soldier and Civilian Classification
 
 ## Team 6
-- **RESERVA, Kurt Daniel M.**
+- **RESERVA**
 - **FELISILDA**
 - **NONAN**
 
