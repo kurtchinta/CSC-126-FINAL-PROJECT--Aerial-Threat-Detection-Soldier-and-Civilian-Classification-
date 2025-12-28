@@ -7,6 +7,15 @@
 
 ---
 
+## 🔗 Important Links
+
+| Resource | Link |
+|----------|------|
+| **📹 Recorded Presentation & Documentation** | [Google Drive](https://drive.google.com/drive/folders/1_qQ9Kied6F4RpD2GUeIZlhwzRgDfDR08?usp=sharing) |
+| **💻 GitHub Repository** | [GitHub](https://github.com/kurtchinta/CSC-126-FINAL-PROJECT--Aerial-Threat-Detection-Soldier-and-Civilian-Classification-.git) |
+
+---
+
 ## Table of Contents
 1. [Project Overview](#project-overview)
 2. [System Requirements](#system-requirements)
@@ -454,6 +463,7 @@ jupyter notebook backend/civilian_soldier_working/FINAL_CSC_AERIAL.ipynb
 | Source Code | `src/` |
 | Training Notebook | `backend/civilian_soldier_working/FINAL_CSC_AERIAL.ipynb` |
 | Documentation | `docs/`, `README.md` |
+| **Recorded Presentation & Docs** | [Google Drive](https://drive.google.com/drive/folders/1_qQ9Kied6F4RpD2GUeIZlhwzRgDfDR08?usp=sharing) |
 
 ---
 
