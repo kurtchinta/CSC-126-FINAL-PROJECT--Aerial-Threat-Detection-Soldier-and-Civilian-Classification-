@@ -7,7 +7,7 @@
 
 ---
 
-## 🔗 Important Links
+## Important Links
 
 | Resource | Link |
 |----------|------|
