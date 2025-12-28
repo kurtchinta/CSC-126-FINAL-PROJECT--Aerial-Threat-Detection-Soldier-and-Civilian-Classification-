@@ -7,387 +7,497 @@
 
 ---
 
+## Table of Contents
+1. [Project Overview](#project-overview)
+2. [System Requirements](#system-requirements)
+3. [Complete Installation Guide](#complete-installation-guide)
+4. [Running the Application](#running-the-application)
+5. [Project Structure](#project-structure)
+6. [Features](#features)
+7. [Dependencies](#dependencies)
+8. [Troubleshooting](#troubleshooting)
+9. [Dataset Sources](#dataset-sources)
+10. [Ethical Considerations](#ethical-considerations)
+
+---
+
 ## Project Overview
 
-As tensions escalate and conflict looms, the ability to identify and classify individuals from aerial surveillance becomes a crucial defense capability. This project develops a computer vision system that distinguishes soldiers from civilians in aerial imagery captured by drones, supporting reconnaissance and humanitarian operations.
+This project develops a computer vision system that distinguishes soldiers from civilians in aerial imagery captured by drones, supporting reconnaissance and humanitarian operations. The system uses YOLO11n deep learning architecture for real-time object detection and classification.
 
-As students of Computer Science and Information Technology, this project demonstrates how our field can contribute to national defense through intelligent aerial surveillance using deep learning and real-time video processing.
+### Key Capabilities
+- **Real-time Detection**: Process video files and live camera streams
+- **Classification**: Distinguish between soldiers and civilians with bounding boxes
+- **Desktop Application**: Professional Electron-based interface
+- **Cumulative Statistics**: Track total detections throughout processing
 
-## Objectives
+---
 
-1. **Build an image classification model** to distinguish soldiers from civilians in aerial images
-2. **Utilize drone footage** from publicly available datasets (Roboflow)
-3. **Integrate the trained model** with video stream processing (drone footage simulation)
-4. **Provide a system prototype** that visualizes classifications in real-time through an Electron desktop application
+## System Requirements
 
-## Strategic Importance
+### Minimum Requirements
+| Component | Requirement |
+|-----------|-------------|
+| **Operating System** | Windows 10/11, macOS 10.15+, or Linux (Ubuntu 20.04+) |
+| **Python** | 3.8, 3.9, 3.10, or 3.11 (3.12+ may have compatibility issues) |
+| **Node.js** | 16.x or higher (LTS version recommended) |
+| **RAM** | 8 GB minimum (16 GB recommended) |
+| **Storage** | 5 GB free space |
+| **GPU** | Optional but recommended for faster processing |
 
-This system addresses critical needs in:
-- **Defense Operations**: Identifying military personnel in conflict zones
-- **Humanitarian Aid**: Distinguishing civilians for protection and assistance
-- **Reconnaissance**: Real-time intelligence gathering from drone footage
-- **Border Security**: Monitoring and classifying individuals in sensitive areas
-- **Search and Rescue**: Locating personnel in disaster zones
+### Verify Your System
+```bash
+# Check Python version
+python --version
 
-## Key Features
+# Check Node.js version
+node --version
 
-- Soldier/Civilian Classification using YOLO11n deep learning architecture
-- Real-time bounding boxes with class labels ("Soldier", "Civilian")
-- Video stream integration for drone footage simulation and live camera feeds
-- Electron desktop application with professional interface
-- Custom trained model on UAV aerial surveillance datasets
-- Performance evaluation using precision, recall, and mAP metrics
-- Adjustable confidence thresholds for different operational scenarios
-
-## Project Structure
-
-```
-FINAL-CSC/
-├── backend/                   # Backend models and datasets
-│   └── civilian_soldier_working/
-│       ├── yolo11n.pt         # YOLO11n model (default)
-│       ├── dataset.yaml       # Dataset configuration
-│       ├── train/             # Training images and labels
-│       ├── val/               # Validation images and labels
-│       └── test/              # Test images and labels
-├── data/                      # Additional datasets
-│   ├── raw/                   # Raw downloaded datasets
-│   ├── processed/             # Augmented and preprocessed data
-│   ├── best.pt                # Alternative trained model
-│   └── last.pt                # Last checkpoint model
-├── src/                       # Source code
-│   ├── data_prep/             # Data preparation scripts
-│   ├── training/              # Model training scripts
-│   └── detection/             # Real-time detection system
-│       ├── detect_video.py    # Video file processing
-│       └── detect_stream.py   # Live stream processing
-├── electron-app/              # Electron desktop application
-│   ├── main.js                # Main process (Python integration)
-│   ├── renderer.js            # Renderer process (UI logic)
-│   ├── index.html             # User interface (mint green theme)
-│   └── package.json           # Node.js dependencies
-├── docs/                      # Documentation and guides
-│   ├── QUICKSTART.md          # Quick start guide
-│   ├── SETUP.md               # Setup instructions
-│   └── REPORT_TEMPLATE.md     # Project report template
-├── requirements.txt           # Python dependencies
-├── README.md                  # This file
-└── DEFENSE_OPERATIONS_GUIDE.md # Operational manual
+# Check npm version
+npm --version
 ```
 
-## Dataset Sources
+---
 
-The project utilizes publicly available datasets from Roboflow:
+## Complete Installation Guide
 
-1. **UAV Person Dataset**: https://universe.roboflow.com/militarypersons/uav-person-3
-   - Primary dataset for aerial person detection
-   
-2. **Combatant Dataset**: https://universe.roboflow.com/minwoo/combatant-dataset
-   - Specialized military personnel detection
-   
-3. **Soldiers Detection**: https://universe.roboflow.com/xphoenixua-nlncq/soldiers-detection-spf
-   - Soldier-specific detection dataset
-   
-4. **Look Down Folks**: https://universe.roboflow.com/folks/look-down-folks
-   - Top-down perspective civilian detection
+### Step 1: Clone or Download the Project
 
-These datasets were augmented using techniques including rotation, flipping, and scaling to improve model generalization across various lighting and altitude conditions.
-
-## Installation
-
-### Prerequisites
-- Python 3.8 or higher
-- Node.js 16 or higher
-- CUDA-capable GPU (recommended for training)
-- Git for version control
-
-### Setup Instructions
-
-1. **Clone the repository:**
+**Option A: Clone with Git**
 ```bash
 git clone https://github.com/kurtchinta/CSC-126-FINAL-PROJECT--Aerial-Threat-Detection-Soldier-and-Civilian-Classification-.git
 cd CSC-126-FINAL-PROJECT--Aerial-Threat-Detection-Soldier-and-Civilian-Classification-
 ```
 
-2. **Create and activate Python virtual environment:**
+**Option B: Download ZIP**
+1. Download the project ZIP file
+2. Extract to your desired location
+3. Open terminal/command prompt and navigate to the extracted folder
+
+### Step 2: Set Up Python Environment
+
+**Windows (Command Prompt or PowerShell):**
 ```bash
+# Navigate to project directory
+cd "path\to\FINAL-CSC"
+
+# Create virtual environment
 python -m venv venv
-.\venv\Scripts\activate  # Windows
-source venv/bin/activate  # Linux/Mac
+
+# Activate virtual environment
+.\venv\Scripts\activate
+
+# Verify activation (should show (venv) in prompt)
 ```
 
-3. **Install Python dependencies:**
+**macOS/Linux (Terminal):**
 ```bash
+# Navigate to project directory
+cd path/to/FINAL-CSC
+
+# Create virtual environment
+python3 -m venv venv
+
+# Activate virtual environment
+source venv/bin/activate
+
+# Verify activation (should show (venv) in prompt)
+```
+
+### Step 3: Install Python Dependencies
+
+```bash
+# Ensure virtual environment is activated (you should see (venv) in your prompt)
+
+# Upgrade pip first
+pip install --upgrade pip
+
+# Install all required packages
 pip install -r requirements.txt
 ```
 
-4. **Install Node.js dependencies for Electron application:**
+**Expected installation time:** 5-15 minutes depending on internet speed
+
+**Verify installation:**
 ```bash
+python -c "import torch; import ultralytics; import cv2; import flask; print('All packages installed successfully!')"
+```
+
+### Step 4: Install Node.js Dependencies for Desktop App
+
+```bash
+# Navigate to electron-app folder
 cd electron-app
+
+# Install Node.js packages
 npm install
+
+# Return to project root
 cd ..
 ```
 
-## Project Implementation
+**Expected installation time:** 2-5 minutes
 
-### Phase 1: Dataset Preparation
+### Step 5: Verify Model File Exists
 
-**Objective:** Collect and prepare labeled datasets for training
-
-```bash
-# Download datasets from Roboflow
-python src/data_prep/download_datasets.py
+The trained model file should be located at:
+```
+backend/civilian_soldier_working/runs/train/custom_aerial_detection/weights/best.pt
 ```
 
-**Data Augmentation:**
+**To verify:**
 ```bash
-# Apply augmentation techniques (rotate, flip, scale)
-python src/data_prep/augment_data.py
+# Windows
+dir backend\civilian_soldier_working\runs\train\custom_aerial_detection\weights\
+
+# macOS/Linux
+ls backend/civilian_soldier_working/runs/train/custom_aerial_detection/weights/
 ```
 
-The dataset preparation process includes:
-- Collecting labeled images of soldiers and civilians
-- Applying augmentation to improve model generalization
-- Organizing data into train/validation/test splits
-- Ensuring balanced class distribution
+If `best.pt` is missing, check `data/best.pt` as an alternative location.
 
-### Phase 2: Model Selection and Training
+---
 
-**Objective:** Train YOLO11n model for real-time object detection
+## Running the Application
 
-**Training via Python script:**
+### Option 1: Desktop Application (Recommended)
+
+This is the primary way to use the system with a graphical interface.
+
+```bash
+# Make sure you're in the project root directory
+# Activate virtual environment first
+.\venv\Scripts\activate  # Windows
+source venv/bin/activate  # macOS/Linux
+
+# Navigate to electron-app
+cd electron-app
+
+# Start the application
+npm start
+```
+
+**Using the Desktop App:**
+1. **Select Video/Stream Tab**: Choose between video file or live stream
+2. **Browse Video**: Click "Browse" to select a video file (.mp4, .avi, .mov)
+3. **Adjust Settings**: Set confidence threshold (default: 0.55) and IOU threshold (default: 0.40)
+4. **Start Detection**: Click "Start Detection" to begin processing
+5. **View Results**: Watch real-time detection with bounding boxes
+6. **Stop/Continue**: Use Stop to pause, then Continue or New Detection
+
+### Option 2: Command Line - Video File Detection
+
+```bash
+# Activate virtual environment
+.\venv\Scripts\activate  # Windows
+source venv/bin/activate  # macOS/Linux
+
+# Run detection on a video file
+python src/detection/detect_video.py --source "path/to/your/video.mp4" --conf 0.5
+```
+
+### Option 3: Command Line - Live Stream/Webcam
+
+```bash
+# Activate virtual environment
+.\venv\Scripts\activate  # Windows
+source venv/bin/activate  # macOS/Linux
+
+# Run detection on webcam (0 = default camera)
+python src/detection/detect_stream.py --source 0 --conf 0.5
+
+# Run detection on RTSP stream
+python src/detection/detect_stream.py --source "rtsp://your-stream-url" --conf 0.5
+```
+
+---
+
+## Project Structure
+
+```
+FINAL-CSC/
+├── backend/                          # Backend models and datasets
+│   └── civilian_soldier_working/
+│       ├── yolo11n.pt                # Base YOLO11n model
+│       ├── yolov8n.pt                # Alternative YOLOv8 model
+│       ├── dataset.yaml              # Dataset configuration
+│       ├── FINAL_CSC_AERIAL.ipynb    # Training notebook
+│       ├── runs/                     # Training outputs
+│       │   └── train/
+│       │       └── custom_aerial_detection/
+│       │           └── weights/
+│       │               └── best.pt   # ★ TRAINED MODEL FILE
+│       ├── train/                    # Training images and labels
+│       ├── val/                      # Validation images and labels
+│       └── test/                     # Test images and labels
+│
+├── data/                             # Additional data files
+│   ├── best.pt                       # Alternative model location
+│   └── last.pt                       # Last checkpoint
+│
+├── src/                              # Source code
+│   ├── __init__.py
+│   ├── data_prep/                    # Data preparation scripts
+│   │   ├── __init__.py
+│   │   ├── download_datasets.py
+│   │   ├── augment_data.py
+│   │   └── utils.py
+│   ├── training/                     # Model training scripts
+│   │   ├── __init__.py
+│   │   ├── train_yolo.py
+│   │   └── evaluate.py
+│   └── detection/                    # Detection system
+│       ├── __init__.py
+│       ├── detect_video.py           # Video file processing
+│       └── detect_stream.py          # Live stream processing
+│
+├── electron-app/                     # Desktop application
+│   ├── main.js                       # Electron main process
+│   ├── renderer.js                   # UI logic and interactions
+│   ├── index.html                    # User interface
+│   └── package.json                  # Node.js dependencies
+│
+├── docs/                             # Documentation
+│   ├── QUICKSTART.md
+│   ├── SETUP.md
+│   └── REPORT_TEMPLATE.md
+│
+├── output/                           # Output files
+│   └── videos/                       # Processed video outputs
+│
+├── requirements.txt                  # Python dependencies
+├── README.md                         # This file
+├── LICENSE                           # License information
+└── test_*.py                         # Test scripts
+```
+
+---
+
+## Features
+
+### Desktop Application Features
+- **Video Tab**: Load and process video files (.mp4, .avi, .mov, .mkv)
+- **Stream Tab**: Connect to webcam (0, 1) or RTSP streams
+- **Real-time Display**: Side-by-side original and detected frames
+- **Statistics Panel**: Live count of civilians, soldiers, and total detections
+- **Adjustable Parameters**: Confidence and IOU thresholds
+- **Detection Controls**: Start, Stop, Continue, New Detection options
+- **Log Output**: Real-time processing logs and status updates
+
+### Detection Capabilities
+- **Soldier Detection**: Red bounding boxes with confidence scores
+- **Civilian Detection**: Green bounding boxes with confidence scores
+- **Cumulative Counting**: Running total of all detections
+- **FPS Display**: Real-time processing speed indicator
+- **Progress Tracking**: Frame count and completion percentage
+
+---
+
+## Dependencies
+
+### Python Libraries (requirements.txt)
+
+| Category | Package | Version | Purpose |
+|----------|---------|---------|---------|
+| **Deep Learning** | torch | ≥2.0.0 | PyTorch framework |
+| | torchvision | ≥0.15.0 | Image processing |
+| | ultralytics | ≥8.0.0 | YOLO implementation |
+| **Computer Vision** | opencv-python | ≥4.8.0 | Video processing |
+| | opencv-contrib-python | ≥4.8.0 | Additional CV functions |
+| **Data Processing** | numpy | ≥1.24.0 | Numerical operations |
+| | pandas | ≥2.0.0 | Data manipulation |
+| | Pillow | ≥10.0.0 | Image handling |
+| **Visualization** | matplotlib | ≥3.7.0 | Plotting |
+| | seaborn | ≥0.12.0 | Statistical visualization |
+| **Web Framework** | flask | ≥2.3.0 | Video streaming server |
+| | flask-cors | ≥4.0.0 | Cross-origin support |
+| **Utilities** | tqdm | ≥4.65.0 | Progress bars |
+| | pyyaml | ≥6.0 | Configuration files |
+| | requests | ≥2.31.0 | HTTP requests |
+
+### Node.js Packages (electron-app/package.json)
+
+| Package | Version | Purpose |
+|---------|---------|---------|
+| electron | ^28.0.0 | Desktop application framework |
+| electron-builder | ^24.9.0 | Application packaging |
+| electron-store | ^8.1.0 | Local storage |
+
+---
+
+## Troubleshooting
+
+### Common Issues and Solutions
+
+#### Issue 1: "Python not found" or wrong version
+```bash
+# Check installed Python versions
+python --version
+python3 --version
+
+# Use specific version if needed
+python3.10 -m venv venv
+```
+
+#### Issue 2: Virtual environment not activating
+```bash
+# Windows PowerShell - may need execution policy change
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+
+# Then try activation again
+.\venv\Scripts\activate
+```
+
+#### Issue 3: Package installation fails
+```bash
+# Upgrade pip first
+pip install --upgrade pip
+
+# Install packages one at a time if bulk install fails
+pip install torch torchvision
+pip install ultralytics
+pip install opencv-python flask
+```
+
+#### Issue 4: "Model not found" error
+- Verify model exists at: `backend/civilian_soldier_working/runs/train/custom_aerial_detection/weights/best.pt`
+- Alternative: Copy `data/best.pt` to the expected location
+- Or update model path in the application settings
+
+#### Issue 5: Electron app won't start
+```bash
+# Clear node_modules and reinstall
+cd electron-app
+rm -rf node_modules  # Linux/Mac
+rmdir /s /q node_modules  # Windows
+npm install
+npm start
+```
+
+#### Issue 6: CUDA/GPU errors
+```bash
+# Check CUDA availability
+python -c "import torch; print(torch.cuda.is_available())"
+
+# If False, the system will use CPU (slower but functional)
+```
+
+#### Issue 7: Video not displaying
+- Ensure video format is supported (.mp4, .avi, .mov)
+- Check if Flask server started (look for port 5000 messages in log)
+- Try a different video file
+
+### Getting Help
+1. Check the log output in the application for specific error messages
+2. Run test scripts to verify installation:
+   ```bash
+   python test_environment.py
+   python test_model.py
+   ```
+
+---
+
+---
+
+## Dataset Sources
+
+The project utilizes publicly available datasets from Roboflow:
+
+| Dataset | URL | Purpose |
+|---------|-----|---------|
+| UAV Person Dataset | https://universe.roboflow.com/militarypersons/uav-person-3 | Primary aerial person detection |
+| Combatant Dataset | https://universe.roboflow.com/minwoo/combatant-dataset | Military personnel detection |
+| Soldiers Detection | https://universe.roboflow.com/xphoenixua-nlncq/soldiers-detection-spf | Soldier-specific detection |
+| Look Down Folks | https://universe.roboflow.com/folks/look-down-folks | Top-down civilian detection |
+
+---
+
+## Training the Model (Optional)
+
+If you need to retrain the model:
+
+### Option A: Using Python Script
 ```bash
 python src/training/train_yolo.py --epochs 100 --batch 16 --img 640
 ```
 
-**Training via Jupyter Notebook:**
+### Option B: Using Jupyter Notebook
 ```bash
 jupyter notebook backend/civilian_soldier_working/FINAL_CSC_AERIAL.ipynb
 ```
 
-**Model Evaluation:**
-```bash
-python src/training/evaluate.py --weights backend/civilian_soldier_working/yolo11n.pt
-```
+### Option C: Google Colab (Recommended for free GPU)
+1. Upload `FINAL_CSC_AERIAL.ipynb` to Google Colab
+2. Enable GPU runtime (Runtime → Change runtime type → GPU)
+3. Run all cells
 
-The training process utilizes:
-- YOLO11n architecture for optimal speed and accuracy balance
-- Annotated drone-like aerial images
-- Evaluation metrics: Precision, Recall, mAP (mean Average Precision)
-- Custom confidence thresholds (0.50 general, 0.65 for civilians)
-
-### Phase 3: System Development
-
-**Objective:** Integrate trained model with video stream processing
-
-**Video File Detection:**
-```bash
-python src/detection/detect_video.py --source path/to/video.mp4 --weights backend/civilian_soldier_working/yolo11n.pt --conf 0.5
-```
-
-**Live Stream Detection:**
-```bash
-python src/detection/detect_stream.py --source 0 --weights backend/civilian_soldier_working/yolo11n.pt --conf 0.5
-```
-
-**Electron Desktop Application:**
-```bash
-cd electron-app
-npm start
-```
-
-System features include:
-- Real-time bounding boxes with class labels
-- Video file upload and processing
-- Live camera/RTSP stream support
-- Adjustable confidence and IOU thresholds
-- Real-time statistics (civilian count, soldier count, total detections)
-
-### Phase 4: Testing and Evaluation
-
-**Testing Approach:**
-- Test model on unseen aerial images and video feeds
-- Assess accuracy across various lighting conditions
-- Evaluate performance at different altitude perspectives
-- Measure inference speed and real-time processing capability
-
-**Performance Metrics:**
-- **Precision**: Accuracy of positive predictions (minimize false positives)
-- **Recall**: Ability to detect all positive instances (minimize false negatives)
-- **mAP@0.5**: Mean Average Precision at 0.5 IoU threshold
-- **mAP@0.5:0.95**: Mean Average Precision across multiple IoU thresholds
-- **Inference Speed**: Frames per second on target hardware
-
-Training results and detailed metrics are saved in:
-`backend/civilian_soldier_working/runs/train/`
-
-## Tools and Technologies
-
-**Programming Languages:**
-- Python 3.8+ (Backend processing and AI/ML pipeline)
-- JavaScript/Node.js (Electron application interface)
-
-**Deep Learning Frameworks:**
-- YOLO11n (Primary model for real-time object detection)
-- YOLOv8 (Alternative detection framework)
-- PyTorch (Deep learning framework for model training)
-- Ultralytics (YOLO implementation and training tools)
-
-**Computer Vision:**
-- OpenCV (Video processing and visualization)
-- Roboflow (Dataset management and augmentation)
-
-**Application Development:**
-- Electron (Cross-platform desktop application framework)
-- HTML/CSS/JavaScript (User interface)
-
-**Development Environment:**
-- Google Colab / Local GPU (Model training)
-- Visual Studio Code (Code editor)
-- Git/GitHub (Version control)
-
-## Expected Output
-
-This project delivers:
-
-1. **Working Prototype System**
-   - Electron desktop application capable of detecting and classifying individuals in aerial footage
-   - Real-time video processing with bounding box visualization
-   - Support for both video file upload and live stream processing
-   - Available on GitHub: https://github.com/kurtchinta/CSC-126-FINAL-PROJECT--Aerial-Threat-Detection-Soldier-and-Civilian-Classification-.git
-
-2. **Model Performance Documentation**
-   - Trained YOLO11n model with evaluation metrics (precision, recall, mAP)
-   - Training logs and performance graphs
-   - Testing results on various lighting and altitude conditions
-
-3. **Technical Report and Presentation**
-   - Model design and architecture explanation
-   - Performance analysis and evaluation
-   - Recommendations for real-world deployment
-   - Discussion of ethical considerations and limitations
-
-## Real-World Deployment Considerations
-
-**Technical Requirements:**
-- High-performance computing infrastructure for real-time processing
-- Reliable communication systems for drone-to-ground transmission
-- Robust error handling and fail-safe mechanisms
-- Regular model updates and retraining with new data
-
-**Operational Factors:**
-- Validation across diverse environments (urban, rural, forest, desert)
-- Testing under various weather conditions
-- Integration with existing military/humanitarian systems
-- Operator training and standard operating procedures
-
-**Limitations:**
-- Model accuracy depends on image quality and viewing angle
-- Performance may vary in extreme lighting conditions
-- Requires continuous monitoring and human oversight
-- Cannot replace human judgment in critical decision-making
+---
 
 ## Ethical Considerations
 
 **IMPORTANT**: This project is strictly educational and conceptual.
 
-**Ethical Guidelines:**
-- This system is developed solely for academic learning and demonstration purposes
+- Developed solely for academic learning and demonstration purposes
 - Not intended for real-life military application without proper ethical evaluation
 - Requires government oversight, legal compliance, and ethical review before any deployment
 - Must respect privacy rights and human rights considerations
-- Acknowledges potential for misuse and dual-use technology concerns
-
-**Humanitarian Emphasis:**
 - Primary focus on humanitarian applications (search and rescue, disaster response)
-- Should prioritize civilian protection over military objectives
-- Must include human oversight in all operational scenarios
-- Requires transparent decision-making processes
 
-**Responsible AI Development:**
-- Model bias testing and mitigation strategies
-- Accountability frameworks for system errors
-- Clear documentation of limitations and failure modes
-- Ongoing ethical assessment throughout system lifecycle
-
-## Future Enhancements
-
-**Technical Improvements:**
-- Multi-class detection (vehicles, weapons, equipment)
-- Thermal imaging integration for night operations
-- Edge deployment for on-device processing
-- Real drone hardware integration (DJI SDK)
-- Advanced tracking and trajectory prediction algorithms
-- Cloud-based processing pipeline for distributed systems
-
-**Operational Enhancements:**
-- Integration with geographic information systems (GIS)
-- Multi-drone coordination and data fusion
-- Automated alert and notification systems
-- Historical data analysis and pattern recognition
-- Mobile application for field operations
+---
 
 ## Project Deliverables
 
-**Repository Contents:**
-- Complete source code for all components
-- Trained YOLO11n model weights
-- Dataset preparation and augmentation scripts
-- Electron desktop application
-- Documentation and user guides
-- Training logs and performance metrics
+| Deliverable | Location |
+|-------------|----------|
+| Trained YOLO11n Model | `backend/civilian_soldier_working/runs/train/custom_aerial_detection/weights/best.pt` |
+| Desktop Application | `electron-app/` |
+| Source Code | `src/` |
+| Training Notebook | `backend/civilian_soldier_working/FINAL_CSC_AERIAL.ipynb` |
+| Documentation | `docs/`, `README.md` |
 
-**Documentation:**
-- README.md (this file)
-- DEFENSE_OPERATIONS_GUIDE.md (operational manual)
-- QUICKSTART.md (quick start guide)
-- SETUP.md (detailed setup instructions)
-- REPORT_TEMPLATE.md (project report structure)
+---
 
-## Contributing
+## Quick Reference Commands
 
-This is an educational project developed for CSC 126. Contributions should align with ethical guidelines and educational purposes. For suggestions or improvements, please open an issue or submit a pull request on GitHub.
+```bash
+# === SETUP ===
+python -m venv venv                    # Create virtual environment
+.\venv\Scripts\activate                # Activate (Windows)
+source venv/bin/activate               # Activate (Mac/Linux)
+pip install -r requirements.txt        # Install Python packages
+cd electron-app && npm install         # Install Node packages
+
+# === RUN APPLICATION ===
+cd electron-app && npm start           # Start desktop app
+
+# === COMMAND LINE DETECTION ===
+python src/detection/detect_video.py --source video.mp4 --conf 0.5
+python src/detection/detect_stream.py --source 0 --conf 0.5
+
+# === TESTING ===
+python test_environment.py             # Test Python environment
+python test_model.py                   # Test model loading
+```
+
+---
 
 ## License
 
 This project is developed for educational purposes as part of CSC 126 coursework. See LICENSE file for details.
 
-## Acknowledgments
+---
 
-**Academic Resources:**
-- Roboflow community for dataset curation and management tools
-- Ultralytics for YOLO11n and YOLOv8 frameworks
-- OpenCV community for computer vision libraries
-- Academic institutions supporting computer vision research
-
-**Development Team:**
-- Team 6 members for collaborative development and testing
-- Course instructors for guidance and project requirements
-- Open-source community for tools and resources
-
-## Team Contact Information
+## Team Contact
 
 **Team 6 - CSC 126 Final Project**
-
-Team Members:
 - RESERVA, Kurt Daniel M.
 - FELISILDA
 - NONAN
 
-**Project Repository:**
-https://github.com/kurtchinta/CSC-126-FINAL-PROJECT--Aerial-Threat-Detection-Soldier-and-Civilian-Classification-.git
-
-For questions, issues, or collaboration inquiries, please open an issue on the GitHub repository.
+**Repository:** https://github.com/kurtchinta/CSC-126-FINAL-PROJECT--Aerial-Threat-Detection-Soldier-and-Civilian-Classification-.git
 
 ---
 
 ## Disclaimer
 
-This system is a prototype developed for educational demonstration purposes only. It is not intended for operational military or surveillance use. Real-world deployment would require:
-- Extensive validation and testing across diverse scenarios
-- Comprehensive ethical review and approval
-- Legal compliance with national and international laws
-- Professional oversight and quality assurance
-- Ongoing monitoring and accountability mechanisms
-
-The developers acknowledge the sensitive nature of this technology and emphasize its educational purpose in learning computer vision, deep learning, and system integration concepts.
+This system is a prototype developed for educational demonstration purposes only. It is not intended for operational military or surveillance use. The developers acknowledge the sensitive nature of this technology and emphasize its educational purpose in learning computer vision, deep learning, and system integration concepts.

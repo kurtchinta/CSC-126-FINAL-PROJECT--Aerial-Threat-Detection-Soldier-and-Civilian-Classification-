@@ -16,14 +16,15 @@ from collections import deque
 
 
 PROJECT_ROOT = Path(__file__).parent.parent.parent
-MODELS_DIR = PROJECT_ROOT / "models"
+BEST_PT_PATH = PROJECT_ROOT / 'backend' / 'civilian_soldier_working' / 'runs' / 'train' / 'custom_aerial_detection' / 'weights' / 'best.pt'
+YOLOV11_PATH = PROJECT_ROOT / 'backend' / 'civilian_soldier_working' / 'yolo11n.pt'
 OUTPUT_DIR = PROJECT_ROOT / "output" / "streams"
 
 
 class StreamDetector:
     """Real-time stream detection with YOLO"""
     
-    def __init__(self, model_path: Path, conf_threshold: float = 0.50, 
+    def __init__(self, model_path: Path = None, conf_threshold: float = 0.50, 
                  iou_threshold: float = 0.45, buffer_size: int = 30):
         """
         Initialize stream detector
@@ -34,7 +35,16 @@ class StreamDetector:
             iou_threshold: IOU threshold for NMS
             buffer_size: Size of FPS calculation buffer
         """
-        self.model_path = model_path
+        # Use provided model path or default to best.pt
+        if model_path and Path(model_path).exists():
+            self.model_path = Path(model_path)
+        elif BEST_PT_PATH.exists():
+            self.model_path = BEST_PT_PATH
+        elif YOLOV11_PATH.exists():
+            self.model_path = YOLOV11_PATH
+        else:
+            raise FileNotFoundError("No model weights found!")
+        
         self.conf_threshold = conf_threshold
         self.iou_threshold = iou_threshold
         self.model = None
@@ -54,6 +64,9 @@ class StreamDetector:
         self.frame_count = 0
         self.fps_buffer = deque(maxlen=buffer_size)
         self.detection_history = deque(maxlen=100)
+        
+        # Cumulative detection counts
+        self.total_detections = {0: 0, 1: 0}
         
         # Recording
         self.is_recording = False
@@ -90,8 +103,9 @@ class StreamDetector:
                 if class_id == 0 and confidence < 0.65:  # Civilian needs 65% confidence
                     continue
                 
-                # Count detection
+                # Count detection (both current and cumulative)
                 current_detections[class_id] += 1
+                self.total_detections[class_id] += 1
                 
                 # Get color and label
                 color = self.class_colors.get(class_id, (255, 255, 255))
@@ -147,14 +161,19 @@ class StreamDetector:
         cv2.putText(frame, f"Frame: {self.frame_count}", (20, 90),
                    cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
         
-        # Current detections
+        # Current detections (show cumulative totals)
         y_offset = 115
-        for class_id, count in detections.items():
+        for class_id in [0, 1]:  # Civilian, Soldier
             color = self.class_colors.get(class_id, (255, 255, 255))
             class_name = self.class_names.get(class_id, f"Class {class_id}")
+            count = self.total_detections.get(class_id, 0)
             cv2.putText(frame, f"{class_name}: {count}", (20, y_offset),
                        cv2.FONT_HERSHEY_SIMPLEX, 0.6, color, 2)
             y_offset += 25
+        
+        # Total cumulative detections
+        cv2.putText(frame, f"Total: {sum(self.total_detections.values())}", (20, y_offset),
+                   cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
         
         # Recording indicator
         if self.is_recording:
@@ -268,23 +287,6 @@ class StreamDetector:
                 if self.is_recording and self.video_writer:
                     self.video_writer.write(annotated_frame)
                 
-                # Display
-                cv2.imshow('Aerial Surveillance - Live Stream', annotated_frame)
-                
-                # Handle keyboard input
-                key = cv2.waitKey(1) & 0xFF
-                
-                if key == ord('q'):
-                    print("\nStopped by user")
-                    break
-                elif key == ord('r'):
-                    if self.is_recording:
-                        self.stop_recording()
-                    else:
-                        self.start_recording(width, height, fps)
-                elif key == ord('s'):
-                    self.save_screenshot(annotated_frame)
-                
                 # Print periodic updates
                 if self.frame_count % 100 == 0:
                     print(f"Frame: {self.frame_count} | FPS: {avg_fps:.1f} | "
@@ -299,7 +301,6 @@ class StreamDetector:
             if self.is_recording:
                 self.stop_recording()
             cap.release()
-            cv2.destroyAllWindows()
         
         # Print summary
         print("\n" + "="*60)
@@ -315,8 +316,8 @@ def main():
     parser = argparse.ArgumentParser(description='Real-time stream detection')
     parser.add_argument('--source', type=str, default='0',
                        help='Video source (0 for webcam, RTSP URL, etc.)')
-    parser.add_argument('--weights', type=str, default=str(MODELS_DIR / 'best.pt'),
-                       help='Path to model weights')
+    parser.add_argument('--weights', type=str, default=None,
+                       help='Path to model weights (defaults to best.pt)')
     parser.add_argument('--conf', type=float, default=0.25,
                        help='Confidence threshold')
     parser.add_argument('--iou', type=float, default=0.45,
@@ -324,9 +325,12 @@ def main():
     
     args = parser.parse_args()
     
+    # Determine model path
+    model_path = Path(args.weights) if args.weights else None
+    
     # Initialize detector
     detector = StreamDetector(
-        model_path=Path(args.weights),
+        model_path=model_path,
         conf_threshold=args.conf,
         iou_threshold=args.iou
     )

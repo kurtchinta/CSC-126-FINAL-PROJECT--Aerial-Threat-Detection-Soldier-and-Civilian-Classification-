@@ -20,8 +20,8 @@ function createWindow() {
 
   mainWindow.loadFile('index.html');
   
-  // Open DevTools in development
-  // mainWindow.webContents.openDevTools();
+  // Open DevTools for debugging
+  mainWindow.webContents.openDevTools();
 
   mainWindow.on('closed', () => {
     mainWindow = null;
@@ -75,7 +75,7 @@ ipcMain.handle('select-model-file', async () => {
   return null;
 });
 
-// Start detection
+// Start detection (video with Electron display)
 ipcMain.handle('start-detection', async (event, config) => {
   return new Promise((resolve, reject) => {
     try {
@@ -83,31 +83,60 @@ ipcMain.handle('start-detection', async (event, config) => {
       const projectRoot = path.join(__dirname, '..');
       const pythonScript = path.join(projectRoot, 'src', 'detection', 'detect_video.py');
       
-      // Build command
+      // Build command with unified script arguments
       const args = [
         pythonScript,
         '--source', config.videoPath,
-        '--weights', config.modelPath || path.join(projectRoot, 'backend', 'civilian_soldier_working', 'yolo11n.pt'),
+        '--mode', 'video',
         '--conf', config.confidence.toString(),
-        '--iou', config.iou.toString()
+        '--iou', config.iou.toString(),
+        '--electron'  // Enable Flask streaming for Electron
       ];
       
-      if (config.outputPath) {
-        args.push('--output', config.outputPath);
+      // Add weights if custom model specified
+      if (config.modelPath) {
+        args.push('--weights', path.join(projectRoot, config.modelPath));
       }
       
       // Spawn Python process
+      console.log('Spawning Python process...');
+      console.log('Python script:', pythonScript);
+      console.log('Args:', args);
+      
       detectionProcess = spawn('python', args, {
-        cwd: projectRoot
+        cwd: projectRoot,
+        shell: true
       });
+      
+      console.log('Process spawned with PID:', detectionProcess.pid);
+      
+      let startupComplete = false;
       
       // Send output to renderer
       detectionProcess.stdout.on('data', (data) => {
-        mainWindow.webContents.send('detection-output', data.toString());
+        const output = data.toString();
+        console.log('Python stdout:', output);
+        mainWindow.webContents.send('detection-output', output);
+        
+        // Check if Flask server started
+        if (!startupComplete && output.includes('Flask server started')) {
+          startupComplete = true;
+          console.log('Flask server detected as started');
+          setTimeout(() => {
+            mainWindow.webContents.send('flask-ready');
+          }, 1500);
+        }
       });
       
       detectionProcess.stderr.on('data', (data) => {
-        mainWindow.webContents.send('detection-error', data.toString());
+        const error = data.toString();
+        console.error('Python stderr:', error);
+        mainWindow.webContents.send('detection-error', error);
+      });
+      
+      detectionProcess.on('error', (error) => {
+        console.error('Failed to start Python process:', error);
+        mainWindow.webContents.send('detection-error', `Failed to start: ${error.message}`);
       });
       
       detectionProcess.on('close', (code) => {
@@ -128,18 +157,24 @@ ipcMain.handle('start-stream', async (event, config) => {
   return new Promise((resolve, reject) => {
     try {
       const projectRoot = path.join(__dirname, '..');
-      const pythonScript = path.join(projectRoot, 'src', 'detection', 'detect_stream.py');
+      const pythonScript = path.join(projectRoot, 'src', 'detection', 'detect_video.py');
       
       const args = [
         pythonScript,
         '--source', config.source || '0',
-        '--weights', config.modelPath || path.join(projectRoot, 'backend', 'civilian_soldier_working', 'yolo11n.pt'),
+        '--mode', 'stream',
         '--conf', config.confidence.toString(),
         '--iou', config.iou.toString()
       ];
       
+      // Add weights if custom model specified
+      if (config.modelPath) {
+        args.push('--weights', config.modelPath);
+      }
+      
       detectionProcess = spawn('python', args, {
-        cwd: projectRoot
+        cwd: projectRoot,
+        shell: true
       });
       
       detectionProcess.stdout.on('data', (data) => {
@@ -156,6 +191,64 @@ ipcMain.handle('start-stream', async (event, config) => {
       });
       
       resolve({ success: true, message: 'Stream detection started' });
+      
+    } catch (error) {
+      reject({ success: false, message: error.message });
+    }
+  });
+});
+
+// Start stream detection with Electron display
+ipcMain.handle('start-stream-electron', async (event, config) => {
+  return new Promise((resolve, reject) => {
+    try {
+      const projectRoot = path.join(__dirname, '..');
+      const pythonScript = path.join(projectRoot, 'src', 'detection', 'detect_video.py');
+      
+      const args = [
+        pythonScript,
+        '--source', config.source || '0',
+        '--mode', 'stream',
+        '--conf', config.confidence.toString(),
+        '--iou', config.iou.toString(),
+        '--electron'  // Enable Flask streaming for Electron
+      ];
+      
+      // Add weights if custom model specified
+      if (config.modelPath) {
+        args.push('--weights', config.modelPath);
+      }
+      
+      detectionProcess = spawn('python', args, {
+        cwd: projectRoot,
+        shell: true
+      });
+      
+      let streamStarted = false;
+      
+      detectionProcess.stdout.on('data', (data) => {
+        const output = data.toString();
+        mainWindow.webContents.send('detection-output', output);
+        
+        // Check if Flask server started
+        if (!streamStarted && output.includes('Flask server started')) {
+          streamStarted = true;
+          setTimeout(() => {
+            mainWindow.webContents.send('flask-ready');
+          }, 1500);
+        }
+      });
+      
+      detectionProcess.stderr.on('data', (data) => {
+        mainWindow.webContents.send('detection-error', data.toString());
+      });
+      
+      detectionProcess.on('close', (code) => {
+        mainWindow.webContents.send('detection-complete', code);
+        detectionProcess = null;
+      });
+      
+      resolve({ success: true, message: 'Stream detection started with dual display' });
       
     } catch (error) {
       reject({ success: false, message: error.message });

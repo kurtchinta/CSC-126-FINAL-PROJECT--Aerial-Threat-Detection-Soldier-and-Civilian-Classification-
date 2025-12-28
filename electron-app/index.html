@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Defense Reconnaissance System</title>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' http://localhost:5000 http://127.0.0.1:5000 data:; connect-src 'self' http://localhost:5000 http://127.0.0.1:5000;">
+    <title>Soldier & Civilian Detection</title>
     <style>
         * {
             margin: 0;
@@ -13,8 +14,8 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
-            color: #fff;
+            background: #1a1a1a;
+            color: #e0e0e0;
             height: 100vh;
             overflow: hidden;
         }
@@ -25,117 +26,80 @@
         }
 
         .sidebar {
-            width: 380px;
-            background: linear-gradient(180deg, rgba(16, 185, 129, 0.15) 0%, rgba(5, 150, 105, 0.1) 100%);
-            backdrop-filter: blur(20px);
-            padding: 25px;
+            width: 300px;
+            background: #242424;
+            padding: 20px;
             overflow-y: auto;
-            border-right: 2px solid rgba(16, 185, 129, 0.3);
-            box-shadow: 4px 0 20px rgba(16, 185, 129, 0.1);
+            border-right: 1px solid #333;
         }
 
         .main-content {
             flex: 1;
             display: flex;
             flex-direction: column;
-            padding: 25px;
+            padding: 20px;
+            overflow-y: auto;
+            max-height: 100vh;
+            background: #1a1a1a;
         }
 
         .header {
             text-align: center;
-            margin-bottom: 30px;
-            padding: 25px;
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(5, 150, 105, 0.15) 100%);
-            border-radius: 15px;
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            box-shadow: 0 8px 32px rgba(16, 185, 129, 0.2);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .header::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(16, 185, 129, 0.1), transparent);
-            animation: headerShine 3s infinite;
-        }
-
-        @keyframes headerShine {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            margin-bottom: 20px;
+            padding: 20px 15px;
+            background: #2a2a2a;
+            border-radius: 8px;
+            border: 1px solid #333;
         }
 
         .header h1 {
-            font-size: 26px;
+            font-size: 22px;
             margin-bottom: 8px;
-            background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-weight: bold;
-            position: relative;
-            z-index: 1;
+            color: #10b981;
+            font-weight: 600;
         }
 
         .header p {
-            font-size: 13px;
-            color: #6ee7b7;
-            opacity: 0.9;
-            position: relative;
-            z-index: 1;
+            font-size: 12px;
+            color: #888;
         }
 
         .section {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(5, 150, 105, 0.1) 100%);
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            border: 1px solid rgba(16, 185, 129, 0.25);
-            box-shadow: 0 4px 16px rgba(16, 185, 129, 0.1);
-            transition: all 0.3s ease;
-        }
-
-        .section:hover {
-            box-shadow: 0 6px 24px rgba(16, 185, 129, 0.2);
-            border-color: rgba(16, 185, 129, 0.4);
+            background: #242424;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #333;
         }
 
         .section-title {
-            font-size: 15px;
-            font-weight: bold;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: #6ee7b7;
-            text-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #10b981;
         }
 
         .form-group {
-            margin-bottom: 18px;
+            margin-bottom: 12px;
         }
 
         label {
             display: block;
-            font-size: 13px;
-            margin-bottom: 8px;
-            color: #a7f3d0;
-            font-weight: 500;
+            font-size: 12px;
+            margin-bottom: 5px;
+            color: #aaa;
         }
 
         input[type="text"],
         input[type="number"],
         select {
             width: 100%;
-            padding: 12px;
-            background: rgba(16, 185, 129, 0.08);
-            border: 2px solid rgba(16, 185, 129, 0.3);
-            border-radius: 8px;
-            color: #d1fae5;
-            font-size: 14px;
-            transition: all 0.3s ease;
+            padding: 10px;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 6px;
+            color: #e0e0e0;
+            font-size: 13px;
         }
 
         input[type="text"]:focus,
@@ -143,101 +107,63 @@
         select:focus {
             outline: none;
             border-color: #10b981;
-            background: rgba(16, 185, 129, 0.12);
-            box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
         }
 
         input[type="text"]::placeholder {
-            color: rgba(167, 243, 208, 0.5);
+            color: #555;
         }
 
         button {
             width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            border: 2px solid rgba(16, 185, 129, 0.5);
-            border-radius: 8px;
+            padding: 12px;
+            background: #10b981;
+            border: none;
+            border-radius: 6px;
             color: #fff;
-            font-size: 15px;
-            font-weight: 600;
+            font-size: 14px;
+            font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 8px;
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
-            position: relative;
-            overflow: hidden;
-        }
-
-        button::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
-        }
-
-        button:hover::before {
-            width: 300px;
-            height: 300px;
+            transition: background 0.2s;
+            margin-top: 5px;
         }
 
         button:hover {
-            background: linear-gradient(135deg, #059669 0%, #047857 100%);
-            transform: translateY(-3px);
-            box-shadow: 0 6px 25px rgba(16, 185, 129, 0.5);
-        }
-
-        button:active {
-            transform: translateY(-1px);
+            background: #059669;
         }
 
         button:disabled {
             opacity: 0.5;
             cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
-        button:disabled:hover {
-            transform: none;
-        }
-
-        button.primary {
-            background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
-            border-color: #10b981;
-        }
-
-        button.primary:hover {
-            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
         }
 
         button.danger {
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-            border-color: rgba(239, 68, 68, 0.5);
+            background: #ef4444;
         }
 
         button.danger:hover {
-            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
-            box-shadow: 0 6px 25px rgba(239, 68, 68, 0.5);
+            background: #dc2626;
         }
 
         button.btn-secondary {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.3) 0%, rgba(5, 150, 105, 0.25) 100%);
+            background: #333;
             margin-top: 0;
         }
 
         button.btn-secondary:hover {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.4) 0%, rgba(5, 150, 105, 0.35) 100%);
+            background: #404040;
+        }
+
+        button.btn-new {
+            background: #3b82f6;
+        }
+
+        button.btn-new:hover {
+            background: #2563eb;
         }
 
         .input-group {
             display: flex;
-            gap: 10px;
+            gap: 8px;
         }
 
         .input-group input {
@@ -246,187 +172,190 @@
 
         .input-group button {
             width: auto;
-            padding: 10px 20px;
+            padding: 10px 15px;
         }
 
         .stats {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
+            gap: 8px;
         }
 
         .stat-card {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(5, 150, 105, 0.15) 100%);
-            padding: 20px;
-            border-radius: 12px;
+            background: #2a2a2a;
+            padding: 12px;
+            border-radius: 8px;
             text-align: center;
-            border: 2px solid rgba(16, 185, 129, 0.3);
-            box-shadow: 0 4px 16px rgba(16, 185, 129, 0.15);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(16, 185, 129, 0.1), transparent);
-            transition: transform 0.5s;
-        }
-
-        .stat-card:hover::before {
-            transform: rotate(180deg);
-        }
-
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 30px rgba(16, 185, 129, 0.3);
-            border-color: #10b981;
+            border: 1px solid #333;
         }
 
         .stat-value {
-            font-size: 42px;
-            font-weight: bold;
-            margin-bottom: 8px;
-            background: linear-gradient(135deg, #6ee7b7 0%, #34d399 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            position: relative;
-            z-index: 1;
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 3px;
+            color: #10b981;
         }
 
         .stat-label {
-            font-size: 13px;
-            color: #a7f3d0;
+            font-size: 10px;
+            color: #888;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
-            font-weight: 600;
-            position: relative;
-            z-index: 1;
         }
 
         .output-area {
-            flex: 1;
-            background: linear-gradient(135deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.4) 100%);
-            border-radius: 12px;
-            padding: 20px;
+            background: #1a1a1a;
+            border-radius: 6px;
+            padding: 15px;
             overflow-y: auto;
+            height: 150px;
             font-family: 'Courier New', monospace;
+            font-size: 11px;
+            border: 1px solid #333;
+        }
+
+        .video-display-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .video-panel {
+            background: #242424;
+            border-radius: 8px;
+            border: 1px solid #333;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            min-height: 280px;
+        }
+
+        .video-panel-header {
             font-size: 13px;
-            border: 2px solid rgba(16, 185, 129, 0.2);
-            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3);
+            font-weight: 500;
+            color: #10b981;
+            margin-bottom: 10px;
+            text-align: center;
+            padding: 8px;
+            background: #2a2a2a;
+            border-radius: 6px;
+        }
+
+        .video-frame {
+            flex: 1;
+            background: #000;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .video-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .video-placeholder {
+            color: #555;
+            font-size: 13px;
+            text-align: center;
         }
 
         .log-entry {
-            margin-bottom: 8px;
-            padding: 8px 12px;
-            border-left: 4px solid;
-            background: rgba(16, 185, 129, 0.05);
-            border-radius: 4px;
-            transition: all 0.2s ease;
-        }
-
-        .log-entry:hover {
-            background: rgba(16, 185, 129, 0.1);
+            margin-bottom: 5px;
+            padding: 5px 8px;
+            border-left: 3px solid;
+            background: #242424;
+            border-radius: 3px;
+            font-size: 11px;
         }
 
         .log-entry.info {
             border-color: #10b981;
-            color: #d1fae5;
+            color: #e0e0e0;
         }
 
         .log-entry.error {
             border-color: #ef4444;
-            color: #fecaca;
-            background: rgba(239, 68, 68, 0.05);
-        }
-
-        .log-entry.error:hover {
-            background: rgba(239, 68, 68, 0.1);
+            color: #fca5a5;
         }
 
         .log-entry.success {
             border-color: #10b981;
             color: #6ee7b7;
-            background: rgba(16, 185, 129, 0.1);
         }
 
         .status-bar {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 15px 20px;
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(5, 150, 105, 0.1) 100%);
-            border-radius: 12px;
-            border: 2px solid rgba(16, 185, 129, 0.25);
-            box-shadow: 0 4px 16px rgba(16, 185, 129, 0.1);
+            padding: 10px 15px;
+            background: #242424;
+            border-radius: 8px;
+            border: 1px solid #333;
         }
 
         .status-indicator {
             display: inline-block;
-            width: 12px;
-            height: 12px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
-            margin-right: 10px;
-            animation: pulse 2s infinite;
-            box-shadow: 0 0 10px;
+            margin-right: 8px;
         }
 
         .status-indicator.idle {
             background: #64748b;
-            box-shadow: 0 0 10px #64748b;
         }
 
         .status-indicator.running {
             background: #10b981;
-            box-shadow: 0 0 20px #10b981;
+            animation: pulse 1.5s infinite;
+        }
+
+        .status-indicator.complete {
+            background: #3b82f6;
         }
 
         .status-indicator.error {
             background: #ef4444;
-            box-shadow: 0 0 20px #ef4444;
         }
 
         @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.7; transform: scale(1.1); }
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
         }
 
         .tabs {
             display: flex;
-            gap: 12px;
-            margin-bottom: 20px;
+            gap: 8px;
+            margin-bottom: 15px;
         }
 
         .tab {
             flex: 1;
-            padding: 12px;
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(5, 150, 105, 0.1) 100%);
-            border: 2px solid rgba(16, 185, 129, 0.2);
-            border-radius: 8px;
-            color: #a7f3d0;
+            padding: 10px;
+            background: #2a2a2a;
+            border: 1px solid #333;
+            border-radius: 6px;
+            color: #aaa;
             cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 600;
+            transition: all 0.2s;
+            font-weight: 500;
+            font-size: 13px;
+            text-align: center;
         }
 
         .tab:hover {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.25) 0%, rgba(5, 150, 105, 0.2) 100%);
-            border-color: rgba(16, 185, 129, 0.4);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
+            background: #333;
         }
 
         .tab.active {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            background: #10b981;
             border-color: #10b981;
             color: #fff;
-            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4);
         }
 
         .tab-content {
@@ -435,44 +364,170 @@
 
         .tab-content.active {
             display: block;
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
         }
 
         .controls {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
+            gap: 10px;
+            margin-bottom: 15px;
         }
 
-        /* Scrollbar styling */
+        /* Detection Complete Overlay */
+        .detection-complete-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .detection-complete-overlay.show {
+            display: flex;
+        }
+
+        .detection-complete-card {
+            background: #242424;
+            border-radius: 12px;
+            padding: 30px 40px;
+            text-align: center;
+            border: 2px solid #10b981;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .detection-complete-card h2 {
+            color: #10b981;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .detection-complete-card p {
+            color: #aaa;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .detection-complete-stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 25px;
+        }
+
+        .detection-complete-stat {
+            text-align: center;
+        }
+
+        .detection-complete-stat .value {
+            font-size: 36px;
+            font-weight: 600;
+            color: #10b981;
+        }
+
+        .detection-complete-stat .label {
+            font-size: 12px;
+            color: #888;
+            text-transform: uppercase;
+        }
+
+        .detection-complete-card button {
+            margin-top: 10px;
+        }
+
         ::-webkit-scrollbar {
-            width: 10px;
+            width: 6px;
         }
 
         ::-webkit-scrollbar-track {
-            background: rgba(16, 185, 129, 0.1);
-            border-radius: 5px;
+            background: #1a1a1a;
         }
 
         ::-webkit-scrollbar-thumb {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+            background: #333;
+            border-radius: 3px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(135deg, #059669 0%, #047857 100%);
-            box-shadow: 0 0 15px rgba(16, 185, 129, 0.7);
+            background: #444;
         }
 
         #statusText {
-            color: #d1fae5;
-            font-weight: 500;
+            color: #e0e0e0;
+            font-size: 12px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid #333;
+                max-height: 50vh;
+            }
+
+            .main-content {
+                max-height: 50vh;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                padding: 15px;
+            }
+
+            .main-content {
+                padding: 15px;
+            }
+
+            .video-panel {
+                min-height: 200px;
+            }
+
+            .stat-value {
+                font-size: 22px;
+            }
+
+            .status-bar {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .status-bar button {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats {
+                grid-template-columns: 1fr;
+                gap: 6px;
+            }
+
+            .controls {
+                grid-template-columns: 1fr;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .input-group {
+                flex-direction: column;
+            }
+
+            .input-group button {
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -480,24 +535,24 @@
     <div class="container">
         <div class="sidebar">
             <div class="header">
-                <h1>Defense Reconnaissance System</h1>
-                <p>Soldier & Civilian Classification | Aerial Surveillance</p>
+                <h1>Soldier & Civilian Detection</h1>
+                <p>Aerial Surveillance System</p>
             </div>
 
             <div class="tabs">
-                <button class="tab active" onclick="switchTab('video', event)">Video</button>
-                <button class="tab" onclick="switchTab('stream', event)">Stream</button>
+                <button class="tab active" id="videoTab">Video</button>
+                <button class="tab" id="streamTab">Stream</button>
             </div>
 
             <!-- Video Detection Tab -->
             <div id="video-tab" class="tab-content active">
                 <div class="section">
-                    <div class="section-title">Video Configuration</div>
+                    <div class="section-title">Video Input</div>
                     <div class="form-group">
-                        <label>Video File</label>
+                        <label>Select Video File</label>
                         <div class="input-group">
-                            <input type="text" id="videoPath" placeholder="Select video file..." readonly>
-                            <button onclick="selectVideoFile()" class="btn-secondary">Browse</button>
+                            <input type="text" id="videoPath" placeholder="Choose video..." readonly>
+                            <button id="browseVideoBtn" class="btn-secondary">Browse</button>
                         </div>
                     </div>
                 </div>
@@ -506,7 +561,7 @@
             <!-- Stream Detection Tab -->
             <div id="stream-tab" class="tab-content">
                 <div class="section">
-                    <div class="section-title">Stream Configuration</div>
+                    <div class="section-title">Stream Input</div>
                     <div class="form-group">
                         <label>Stream Source</label>
                         <select id="streamSource">
@@ -521,33 +576,29 @@
                 </div>
             </div>
 
-            <!-- Model Configuration -->
+            <!-- Model Settings -->
             <div class="section">
-                <div class="section-title">Model Configuration</div>
+                <div class="section-title">Model Settings</div>
                 <div class="form-group">
-                    <label>Model Path</label>
-                    <input type="text" id="modelPath" value="backend/civilian_soldier_working/yolo11n.pt" placeholder="YOLO11n model">
-                    <button onclick="selectModelFile()" style="margin-top: 5px;">Browse Model</button>
-                </div>
-                <div class="form-group">
-                    <label>Confidence Threshold</label>
-                    <input type="number" id="confidence" value="0.50" min="0" max="1" step="0.05">
+                    <label>Confidence</label>
+                    <input type="number" id="confidence" value="0.55" min="0" max="1" step="0.05">
                 </div>
                 <div class="form-group">
                     <label>IOU Threshold</label>
-                    <input type="number" id="iou" value="0.45" min="0" max="1" step="0.05">
+                    <input type="number" id="iou" value="0.40" min="0" max="1" step="0.05">
                 </div>
+                <input type="hidden" id="modelPath" value="backend/civilian_soldier_working/runs/train/custom_aerial_detection/weights/best.pt">
             </div>
 
             <!-- Control Buttons -->
             <div class="controls">
-                <button id="startBtn" onclick="startDetection()">▶ Start Detection</button>
-                <button id="stopBtn" class="danger" onclick="stopDetection()" disabled>⬛ Stop Detection</button>
+                <button id="startBtn">Start Detection</button>
+                <button id="stopBtn" class="danger" disabled>Stop</button>
             </div>
 
             <!-- Statistics -->
             <div class="section">
-                <div class="section-title">Detection Statistics</div>
+                <div class="section-title">Detection Results</div>
                 <div class="stats">
                     <div class="stat-card">
                         <div class="stat-value" id="civilianCount">0</div>
@@ -566,21 +617,89 @@
         </div>
 
         <div class="main-content">
-            <div class="section" style="margin-bottom: 20px;">
+            <div class="section" style="margin-bottom: 15px;">
                 <div class="status-bar">
                     <div>
                         <span class="status-indicator idle" id="statusIndicator"></span>
-                        <span id="statusText">System ready. Configure settings and start detection.</span>
+                        <span id="statusText">Ready - Select a video or stream to begin</span>
                     </div>
-                    <button onclick="clearOutput()" style="width: auto; padding: 8px 16px; margin: 0;">Clear Log</button>
+                    <button id="clearLogBtn" style="width: auto; padding: 6px 12px; margin: 0; font-size: 12px;">Clear</button>
+                </div>
+            </div>
+
+            <!-- Video Display Section -->
+            <div class="section video-display-container" id="videoDisplaySection" style="display: none;">
+                <div class="video-panel">
+                    <div class="video-panel-header">Original Feed</div>
+                    <div class="video-frame" id="originalVideoFrame">
+                        <img id="originalStreamImg" src="" alt="Original Stream" style="display: none;">
+                        <div class="video-placeholder" id="originalPlaceholder">Waiting for video...</div>
+                    </div>
+                </div>
+
+                <div class="video-panel">
+                    <div class="video-panel-header">Detection Output</div>
+                    <div class="video-frame" id="detectedVideoFrame">
+                        <img id="detectedStreamImg" src="" alt="Detected Stream" style="display: none;">
+                        <div class="video-placeholder" id="detectedPlaceholder">Waiting for detection...</div>
+                    </div>
                 </div>
             </div>
 
             <div class="section" style="flex: 1; display: flex; flex-direction: column;">
-                <div class="section-title">Detection Output</div>
+                <div class="section-title">Log Output</div>
                 <div class="output-area" id="outputArea">
-                    <div class="log-entry info">System ready. Configure settings and start detection.</div>
+                    <div class="log-entry info">System ready.</div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detection Complete Overlay -->
+    <div class="detection-complete-overlay" id="detectionCompleteOverlay">
+        <div class="detection-complete-card">
+            <h2>Detection Complete</h2>
+            <p>Video processing has finished successfully</p>
+            <div class="detection-complete-stats">
+                <div class="detection-complete-stat">
+                    <div class="value" id="finalCivilians">0</div>
+                    <div class="label">Civilians</div>
+                </div>
+                <div class="detection-complete-stat">
+                    <div class="value" id="finalSoldiers">0</div>
+                    <div class="label">Soldiers</div>
+                </div>
+                <div class="detection-complete-stat">
+                    <div class="value" id="finalTotal">0</div>
+                    <div class="label">Total</div>
+                </div>
+            </div>
+            <button id="newDetectionBtn" class="btn-new">New Detection</button>
+        </div>
+    </div>
+
+    <!-- Detection Stopped Overlay -->
+    <div class="detection-complete-overlay" id="detectionStoppedOverlay">
+        <div class="detection-complete-card">
+            <h2>Detection Paused</h2>
+            <p>Detection was stopped. Continue or start a new detection.</p>
+            <div class="detection-complete-stats">
+                <div class="detection-complete-stat">
+                    <div class="value" id="stoppedCivilians">0</div>
+                    <div class="label">Civilians</div>
+                </div>
+                <div class="detection-complete-stat">
+                    <div class="value" id="stoppedSoldiers">0</div>
+                    <div class="label">Soldiers</div>
+                </div>
+                <div class="detection-complete-stat">
+                    <div class="value" id="stoppedTotal">0</div>
+                    <div class="label">Total</div>
+                </div>
+            </div>
+            <div style="display: flex; gap: 10px; flex-direction: column;">
+                <button id="continueDetectionBtn">Continue Detection</button>
+                <button id="newDetectionBtnStopped" class="btn-new">New Detection</button>
             </div>
         </div>
     </div>
