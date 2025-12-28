@@ -11,8 +11,8 @@
 
 | Resource | Link |
 |----------|------|
-| **📹 Recorded Presentation & Documentation** | [Google Drive](https://drive.google.com/drive/folders/1_qQ9Kied6F4RpD2GUeIZlhwzRgDfDR08?usp=sharing) |
-| **💻 GitHub Repository** | [GitHub](https://github.com/kurtchinta/CSC-126-FINAL-PROJECT--Aerial-Threat-Detection-Soldier-and-Civilian-Classification-.git) |
+| **Recorded Presentation & Documentation** | [Google Drive](https://drive.google.com/drive/folders/1_qQ9Kied6F4RpD2GUeIZlhwzRgDfDR08?usp=sharing) |
+| **GitHub Repository** | [GitHub](https://github.com/kurtchinta/CSC-126-FINAL-PROJECT--Aerial-Threat-Detection-Soldier-and-Civilian-Classification-.git) |
 
 ---
 
