@@ -23,7 +23,7 @@
 
 ## Project Overview
 
-This project develops a computer vision system that distinguishes soldiers from civilians in aerial imagery captured by drones, supporting reconnaissance and humanitarian operations. The system uses YOLO11n deep learning architecture for real-time object detection and classification.
+This project develops a computer vision system that distinguishes soldiers from civilians in aerial imagery captured by drones, supporting reconnaissance and humanitarian operations. The system uses YOLOv8 deep learning architecture for real-time object detection and classification.
 
 ### Key Capabilities
 - **Real-time Detection**: Process video files and live camera streams
@@ -449,7 +449,7 @@ jupyter notebook backend/civilian_soldier_working/FINAL_CSC_AERIAL.ipynb
 
 | Deliverable | Location |
 |-------------|----------|
-| Trained YOLO11n Model | `backend/civilian_soldier_working/runs/train/custom_aerial_detection/weights/best.pt` |
+| Trained YOLOv8 Model | `backend/civilian_soldier_working/runs/train/custom_aerial_detection/weights/best.pt` |
 | Desktop Application | `electron-app/` |
 | Source Code | `src/` |
 | Training Notebook | `backend/civilian_soldier_working/FINAL_CSC_AERIAL.ipynb` |
